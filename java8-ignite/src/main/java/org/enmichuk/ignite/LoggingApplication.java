@@ -15,8 +15,8 @@ public class LoggingApplication {
         cfg.setGridLogger(log);
 
         // Start Ignite node.
-        Ignite ignite = Ignition.start(cfg);
-
-        ignite.log().info("Info Message Logged!");
+        try(Ignite ignite = Ignition.start(cfg)) {
+            ignite.log().info("Info Message Logged!");
+        }
     }
 }
