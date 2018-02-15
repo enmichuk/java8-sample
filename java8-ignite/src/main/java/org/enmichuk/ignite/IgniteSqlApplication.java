@@ -16,12 +16,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public class IgniteSqlApplication {
+    public static final String SQL_PUBLIC_CITY = "SQL_PUBLIC_CITY";
+    public static final String SQL_PUBLIC_PERSON = "SQL_PUBLIC_PERSON";
+
     public static void main(String[] args) throws Exception {
-        Ignition.setClientMode(true);
-        dropSchema();
-        createSchema();
-        insertRecords();
-        requestRecords();
+        IgniteConfiguration cfg = new IgniteConfiguration();
+
+        IgniteLogger log = new Slf4jLogger();
+
+        cfg.setGridLogger(log);
+        try (Ignite ignite = Ignition.start(cfg)) {
+            createSchema();
+            insertRecords(ignite);
+            requestRecords(ignite);
+            dropSchema();
+        }
     }
 
     public static void createSchema() throws Exception {
@@ -55,68 +64,48 @@ public class IgniteSqlApplication {
         conn.close();
     }
 
-    public static void insertRecords() {
-        IgniteConfiguration cfg = new IgniteConfiguration();
+    public static void insertRecords(Ignite ignite) throws Exception {
+        // Getting a reference to an underlying cache created for City table above.
+        IgniteCache cityCache = ignite.cache(SQL_PUBLIC_CITY);
 
-        IgniteLogger log = new Slf4jLogger();
+        // Getting a reference to an underlying cache created for Person table above.
+        IgniteCache personCache = ignite.cache(SQL_PUBLIC_PERSON);
 
-        cfg.setGridLogger(log);
+        // Inserting entries into City.
+        SqlFieldsQuery query = new SqlFieldsQuery(
+                "INSERT INTO City (id, name) VALUES (?, ?)");
 
-        // Connecting to the cluster.
-        try (Ignite ignite = Ignition.start(cfg)) {
+        cityCache.query(query.setArgs(1, "Forest Hill")).getAll();
+        cityCache.query(query.setArgs(2, "Denver")).getAll();
+        cityCache.query(query.setArgs(3, "St. Petersburg")).getAll();
 
-            // Getting a reference to an underlying cache created for City table above.
-            IgniteCache cityCache = ignite.cache("SQL_PUBLIC_CITY");
+        // Inserting entries into Person.
+        query = new SqlFieldsQuery(
+                "INSERT INTO Person (id, name, city_id) VALUES (?, ?, ?)");
 
-            // Getting a reference to an underlying cache created for Person table above.
-            IgniteCache personCache = ignite.cache("SQL_PUBLIC_PERSON");
-
-            // Inserting entries into City.
-            SqlFieldsQuery query = new SqlFieldsQuery(
-                    "INSERT INTO City (id, name) VALUES (?, ?)");
-
-            cityCache.query(query.setArgs(1, "Forest Hill")).getAll();
-            cityCache.query(query.setArgs(2, "Denver")).getAll();
-            cityCache.query(query.setArgs(3, "St. Petersburg")).getAll();
-
-            // Inserting entries into Person.
-            query = new SqlFieldsQuery(
-                    "INSERT INTO Person (id, name, city_id) VALUES (?, ?, ?)");
-
-            personCache.query(query.setArgs(1, "John Doe", 3)).getAll();
-            personCache.query(query.setArgs(2, "Jane Roe", 2)).getAll();
-            personCache.query(query.setArgs(3, "Mary Major", 1)).getAll();
-            personCache.query(query.setArgs(4, "Richard Miles", 2)).getAll();
-        }
+        personCache.query(query.setArgs(1, "John Doe", 3)).getAll();
+        personCache.query(query.setArgs(2, "Jane Roe", 2)).getAll();
+        personCache.query(query.setArgs(3, "Mary Major", 1)).getAll();
+        personCache.query(query.setArgs(4, "Richard Miles", 2)).getAll();
     }
 
-    public static void requestRecords() {
-        IgniteConfiguration cfg = new IgniteConfiguration();
+    public static void requestRecords(Ignite ignite) throws Exception {
+        // Getting a reference to an underlying cache created for City table above.
+        IgniteCache cityCache = ignite.cache(SQL_PUBLIC_CITY);
 
-        IgniteLogger log = new Slf4jLogger();
+        // Querying data from the cluster using a distributed JOIN.
+        SqlFieldsQuery query = new SqlFieldsQuery("SELECT p.name, c.name " +
+                " FROM Person p, City c WHERE p.city_id = c.id");
 
-        cfg.setGridLogger(log);
+        FieldsQueryCursor<List<?>> cursor = cityCache.query(query);
 
-        // Connecting to the cluster.
-        try(Ignite ignite = Ignition.start(cfg)) {
-
-            // Getting a reference to an underlying cache created for City table above.
-            IgniteCache cityCache = ignite.cache("SQL_PUBLIC_CITY");
-
-            // Querying data from the cluster using a distributed JOIN.
-            SqlFieldsQuery query = new SqlFieldsQuery("SELECT p.name, c.name " +
-                    " FROM Person p, City c WHERE p.city_id = c.id");
-
-            FieldsQueryCursor<List<?>> cursor = cityCache.query(query);
-
-            Iterator<List<?>> iterator = cursor.iterator();
+        Iterator<List<?>> iterator = cursor.iterator();
 
 
-            while (iterator.hasNext()) {
-                List<?> row = iterator.next();
+        while (iterator.hasNext()) {
+            List<?> row = iterator.next();
 
-                System.out.println(row.get(0) + ", " + row.get(1));
-            }
+            System.out.println(row.get(0) + ", " + row.get(1));
         }
     }
 
