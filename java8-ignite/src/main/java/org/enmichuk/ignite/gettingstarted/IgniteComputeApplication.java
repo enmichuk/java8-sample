@@ -1,4 +1,4 @@
-package org.enmichuk.ignite;
+package org.enmichuk.ignite.gettingstarted;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;

@@ -1,4 +1,4 @@
-package org.enmichuk.ignite;
+package org.enmichuk.ignite.gettingstarted;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
@@ -14,8 +14,6 @@ import org.apache.ignite.resources.IgniteInstanceResource;
 
 import javax.cache.Cache;
 
-import static org.enmichuk.ignite.IgniteSqlApplication.*;
-
 public class IgniteSqlComputeApplication {
     public static void main(String[] args) throws Exception {
         IgniteConfiguration cfg = new IgniteConfiguration();
@@ -24,15 +22,15 @@ public class IgniteSqlComputeApplication {
 
         cfg.setGridLogger(log);
         try (Ignite ignite = Ignition.start(cfg)) {
-            createSchema();
-            insertRecords(ignite);
+            IgniteSqlApplication.createSchema();
+            IgniteSqlApplication.insertRecords(ignite);
             sendMessages(ignite, 2);
         }
     }
 
     private static void sendMessages(Ignite ignite, long cityId) {
         // Sending the logic to a cluster node that stores Denver and its residents.
-        ignite.compute().affinityRun(SQL_PUBLIC_CITY, cityId, new IgniteRunnable() {
+        ignite.compute().affinityRun(IgniteSqlApplication.SQL_PUBLIC_CITY, cityId, new IgniteRunnable() {
 
             @IgniteInstanceResource
             Ignite ignite;
@@ -40,7 +38,7 @@ public class IgniteSqlComputeApplication {
             @Override
             public void run() {
                 // Getting an access to Persons cache.
-                IgniteCache<BinaryObject, BinaryObject> people = ignite.cache(SQL_PUBLIC_PERSON).withKeepBinary();
+                IgniteCache<BinaryObject, BinaryObject> people = ignite.cache(IgniteSqlApplication.SQL_PUBLIC_PERSON).withKeepBinary();
 
                 ScanQuery<BinaryObject, BinaryObject> query = new ScanQuery <>();
 
