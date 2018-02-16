@@ -9,7 +9,7 @@ import org.apache.ignite.lang.IgniteFuture;
 import org.apache.ignite.logger.slf4j.Slf4jLogger;
 
 public class IgniteAsynchronousApplication {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         IgniteConfiguration cfg = new IgniteConfiguration();
 
         IgniteLogger log = new Slf4jLogger();
