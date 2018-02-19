@@ -11,6 +11,8 @@
     <modules>
         <module>java8-core</module>
         <module>java8-ignite</module>
+        <module>java8-spring-boot</module>
+        <module>java8-spring-boot-ignite</module>
     </modules>
 
     <properties>
