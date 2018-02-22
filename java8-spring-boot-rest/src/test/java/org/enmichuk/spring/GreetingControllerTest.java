@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class GreetingControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -35,5 +34,4 @@ public class GreetingControllerTest {
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
     }
-
 }

@@ -1,14 +1,16 @@
 package org.enmichuk.spring.config;
 
-import org.springframework.context.annotation.*;
-import org.springframework.security.config.annotation.authentication.builders.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String ADMIN = "ADMIN";
@@ -29,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/hello", "/greeting").permitAll()
                 .antMatchers("/user/**").hasRole(USER)
-                .antMatchers("/admin/**").hasRole(ADMIN)
+                .antMatchers("/**").hasRole(ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

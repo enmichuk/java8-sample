@@ -19,4 +19,9 @@ public class SecuredController {
     public String adminData() {
         return securedService.securedData() + " for " + WebSecurityConfig.ADMIN;
     }
+
+    @RequestMapping("/new/data")
+    public String newData() {
+        return securedService.securedData() + " for others";
+    }
 }
