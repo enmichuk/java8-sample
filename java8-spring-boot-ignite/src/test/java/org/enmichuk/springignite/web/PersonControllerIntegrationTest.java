@@ -35,11 +35,13 @@ public class PersonControllerIntegrationTest {
     }
 
     @Test
-    public void createAndGetByFirstName() throws Exception {
+    public void createAndGet() throws Exception {
         Person person = new Person(200L, "Evgeny", "Michuk", 20000.0, "Good employee");
         ResponseEntity<Person> createResponse = template.postForEntity(base.toString() + "/person", person, Person.class);
         assertThat(createResponse.getBody(), equalTo(person));
         ResponseEntity<Person[]> getResponse = template.getForEntity(base.toString() + "/person/firstname/" + person.firstName, Person[].class);
         assertThat(Arrays.asList(getResponse.getBody()), hasItem(person));
+        ResponseEntity<Person> getByLastNameResponse = template.getForEntity(base.toString() + "/person/lastname/" + person.lastName, Person.class);
+        assertThat(getByLastNameResponse.getBody(), equalTo(person));
     }
 }
