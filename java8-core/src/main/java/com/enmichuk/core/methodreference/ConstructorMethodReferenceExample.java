@@ -1,4 +1,4 @@
-package com.enmichuk.methodreference;
+package com.enmichuk.core.methodreference;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

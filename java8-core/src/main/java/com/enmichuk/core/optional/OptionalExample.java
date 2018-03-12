@@ -1,4 +1,4 @@
-package com.enmichuk.optional;
+package com.enmichuk.core.optional;
 
 import java.util.Optional;
 

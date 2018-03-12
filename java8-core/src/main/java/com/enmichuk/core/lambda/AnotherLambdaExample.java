@@ -1,4 +1,4 @@
-package com.enmichuk.lambda;
+package com.enmichuk.core.lambda;
 
 import java.util.function.BiFunction;
 

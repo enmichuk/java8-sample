@@ -1,4 +1,4 @@
-package com.enmichuk.lambda;
+package com.enmichuk.core.lambda;
 
 public class LambdaWithClosureExample {
     private final static int final3 = 3;

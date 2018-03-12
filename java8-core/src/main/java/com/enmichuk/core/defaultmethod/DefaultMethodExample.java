@@ -1,4 +1,4 @@
-package com.enmichuk.defaultmethod;
+package com.enmichuk.core.defaultmethod;
 
 public class DefaultMethodExample {
     public static void main(String[] args) {

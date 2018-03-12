@@ -1,4 +1,4 @@
-package com.enmichuk.hashornjs;
+package com.enmichuk.core.hashornjs;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

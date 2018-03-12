@@ -1,4 +1,4 @@
-package com.enmichuk.methodreference;
+package com.enmichuk.core.methodreference;
 
 public class Car {
     private String name;

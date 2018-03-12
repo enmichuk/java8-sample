@@ -1,4 +1,4 @@
-package com.enmichuk.stream;
+package com.enmichuk.core.stream;
 
 import java.util.*;
 import java.util.stream.Collectors;

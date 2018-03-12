@@ -1,4 +1,4 @@
-package com.enmichuk.datetimeapi;
+package com.enmichuk.core.datetimeapi;
 
 import java.time.*;
 import java.util.Date;

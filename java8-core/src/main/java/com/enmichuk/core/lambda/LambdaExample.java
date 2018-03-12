@@ -1,4 +1,4 @@
-package com.enmichuk.lambda;
+package com.enmichuk.core.lambda;
 
 public class LambdaExample {
     public static void main(String[] args) {
