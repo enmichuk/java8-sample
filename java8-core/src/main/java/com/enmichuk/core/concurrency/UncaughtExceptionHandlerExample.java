@@ -29,6 +29,7 @@ class Task implements Runnable {
         try {
             TimeUnit.MILLISECONDS.sleep(1000);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
         System.out.println(Thread.currentThread().getName());

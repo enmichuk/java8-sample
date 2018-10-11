@@ -13,6 +13,7 @@ public class SingleThreadExecutorExample {
                 System.out.println(Thread.currentThread().getName());
                 System.out.println("Running time: " + (System.currentTimeMillis() - start));
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
         });

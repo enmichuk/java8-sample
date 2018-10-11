@@ -1,6 +1,7 @@
 package com.enmichuk.core.concurrency;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
@@ -15,15 +16,22 @@ public class FutureExample {
 
         for (int i=0; i<4; i++) {
             Integer number = random.nextInt(10);
-            Future<Integer> result = executor.submit(new FactorialCalculator(number));
+            FactorialCalculator task = new FactorialCalculator(number);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+            Future<Integer> result = executor.submit(task);
             resultList.add(result);
         }
 
         for(Future<Integer> future : resultList) {
             try {
                 System.out.println("Future result is - " + " - " + future.get() + "; And Task done is " + future.isDone());
-            } catch (InterruptedException | ExecutionException e)
-            {
+            } catch (InterruptedException | ExecutionException e) {
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
         }
@@ -37,10 +45,12 @@ class FactorialCalculator implements Callable<Integer> {
 
     public FactorialCalculator(Integer number) {
         this.number = number;
+        System.out.println("Created at " + new Date().getTime() + " for number " + this.number);
     }
 
     @Override
     public Integer call() throws Exception {
+        System.out.println("Start at   " + new Date().getTime() + " for number " + this.number);
         int result = 1;
         if ((number > 1)) {
             for (int i = 2; i <= number; i++) {
